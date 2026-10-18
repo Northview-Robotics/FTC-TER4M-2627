@@ -4,10 +4,16 @@ import com.pedropathing.tuning.autotune.Procedure;
 import com.pedropathing.tuning.autotune.Tuner;
 
 import org.firstinspires.ftc.teamcode.pedropathing.procedures.MecanumTuner;
+import org.firstinspires.ftc.teamcode.pedropathing.procedures.ThreeWheelIMUTuner;
 
 public class Tuning {
     @Tuner
     public static Procedure mecanumTuner() {
         return new MecanumTuner();
+    }
+
+    @Tuner
+    public static Procedure threeWheelIMUTuner() {
+        return new ThreeWheelIMUTuner();
     }
 }
