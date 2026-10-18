@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.pedropathing;
+package org.firstinspires.ftc.teamcode.pedro;
 
 import com.pedropathing.tuning.autotune.Procedure;
 import com.pedropathing.tuning.autotune.Tuner;
 
-import org.firstinspires.ftc.teamcode.pedropathing.procedures.MecanumTuner;
-import org.firstinspires.ftc.teamcode.pedropathing.procedures.ThreeWheelIMUTuner;
+import org.firstinspires.ftc.teamcode.pedro.procedures.MecanumTuner;
+import org.firstinspires.ftc.teamcode.pedro.procedures.ThreeWheelIMUTuner;
 
 public class Tuning {
     @Tuner
