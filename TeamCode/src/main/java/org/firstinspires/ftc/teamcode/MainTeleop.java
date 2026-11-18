@@ -17,16 +17,19 @@ import org.firstinspires.ftc.teamcode.utils.SmartMotorController;
 
 @TeleOp
 public class MainTeleop extends OpMode {
-    final static double ARM_DOWN_ANGLE = 1.0;
+    final static double ARM_DOWN_ANGLE = 0.5;
     final static double ARM_UP_ANGLE = 0.0;
+    final static double TRIGGER_THRESHOLD = 0.1;
+    final static double FLYWHEEL_GEAR_RATIO = 1.0 / 1.0;
+    final static double FLYWHEEL_TICKS_PER_REVOLUTION = FLYWHEEL_GEAR_RATIO * 28.0 * 4.0;
 
     DcMotor m_frontLeftDrive;
     DcMotor m_frontRightDrive;
     DcMotor m_backLeftDrive;
     DcMotor m_backRightDrive;
 
-    DcMotor m_flywheel;
-    SmartMotorController m_flywheelController;
+//    DcMotorEx m_flywheel;
+//    SmartMotorController m_flywheelController;
 
     Servo m_arm;
     IMU m_imu;
@@ -40,10 +43,10 @@ public class MainTeleop extends OpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         m_telemetry = new MultipleTelemetry(m_telemetry, dashboard.getTelemetry());
 
-        m_flywheelController =
-                new SmartMotorController(
-                        new FeedForwardController(0.0, 0.0, 0.0)
-                );
+//        m_flywheelController =
+//                new SmartMotorController(
+//                        new FeedForwardController(100.0, 100.0, 0.0)
+//                );
 
         initHardware();
     }
@@ -60,21 +63,43 @@ public class MainTeleop extends OpMode {
             m_imu.resetYaw();
         }
 
-        m_telemetry.update();
+        if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+            m_intake.setPower(1.0);
+        }
+        else if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
+            m_intake.setPower(-1.0);
+        } else {
+            m_intake.setPower(0.0);
+        }
+
+        driveFieldOriented(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
+
+        updateHardware();
+
+        telemetry.update();
+    }
+
+    public void updateHardware() {
+        //m_flywheel.setPower(m_flywheelController.getOutput());
+//        m_flywheel.setPower(1.0);
+//        telemetry.addData("FlywheelRPS", m_flywheel.getVelocity() / FLYWHEEL_TICKS_PER_REVOLUTION);
+//        telemetry.addData("FlywheelPosition", m_flywheel.getCurrentPosition());
+//        telemetry.addData("FlywheelPositionRotations", m_flywheel.getCurrentPosition() / FLYWHEEL_TICKS_PER_REVOLUTION);
+//        telemetry.addData("FlywheelRPSSetpoint", m_flywheelController.getVelocitySetpoint());
     }
 
     public void initHardware() {
-        m_frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
-        m_frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
-        m_backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
-        m_backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
-        m_flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        m_frontLeftDrive = hardwareMap.get(DcMotor.class, "fl");
+        m_frontRightDrive = hardwareMap.get(DcMotor.class, "fr");
+        m_backLeftDrive = hardwareMap.get(DcMotor.class, "bl");
+        m_backRightDrive = hardwareMap.get(DcMotor.class, "br");
+//        m_flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
 
         m_backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         m_frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         m_backRightDrive.setDirection(DcMotor.Direction.FORWARD);
         m_frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        m_flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
+//        m_flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
         m_arm = hardwareMap.get(Servo.class, "arm");
         m_arm.setDirection(Servo.Direction.FORWARD);
@@ -91,6 +116,8 @@ public class MainTeleop extends OpMode {
                 RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         m_imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+//        m_flywheelController.setVelocitySetpoint(10.0);
     }
 
     public void drive(double forward, double right, double rotate) {
