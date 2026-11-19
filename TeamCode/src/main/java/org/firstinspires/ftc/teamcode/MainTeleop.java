@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.utils.SmartMotorController;
 
 @TeleOp
 public class MainTeleop extends OpMode {
-    final static double ARM_DOWN_ANGLE = 0.5;
+    final static double ARM_DOWN_ANGLE = 0.3909;
     final static double ARM_UP_ANGLE = 0.0;
     final static double TRIGGER_THRESHOLD = 0.1;
     final static double FLYWHEEL_GEAR_RATIO = 1.0 / 1.0;
